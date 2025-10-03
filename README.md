@@ -7,12 +7,12 @@ A premium, elite task management app with **stunning diamond design** and **inte
 ## � Download & Install APK
 
 ### 🔗 **Direct Download**
-📱 **[Download Beautiful-TaskManager-debug.apk (Latest v4.0-ELITE)](https://github.com/SyedSaqeeb-28/Task_Manager_Application/raw/main/app/build/outputs/apk/debug/Beautiful-TaskManager-debug.apk)**
+📱 **[Download Beautiful-TaskManager-v4.0-ELITE.apk (Latest Elite Version)](https://github.com/SyedSaqeeb-28/Task_Manager_Application/raw/main/releases/Beautiful-TaskManager-v4.0-ELITE.apk)**
 
 *File size: ~16.4MB | Requires Android 7.0+ (API 24)*
 
 ### 📋 **Installation Steps**
-1. **Download** the `Beautiful-TaskManager-debug.apk` file
+1. **Download** the `Beautiful-TaskManager-v4.0-ELITE.apk` file
 2. **Enable Unknown Sources** on your Android device:
    - Go to Settings → Security → Unknown Sources (Android 7-8)
    - Or Settings → Apps → Special Access → Install Unknown Apps (Android 9+)
