@@ -13,19 +13,25 @@ A premium, feature-rich task management app designed with **stunning diamond aes
 
 *File size: ~16.4MB | Requires Android 7.0+*
 
-###  **Installation Steps**
-1. **Download** the APK file using the link above
-2. **Enable Unknown Sources** on your Android device:
-   - Android 7-8: Settings → Security → Unknown Sources
-   - Android 9+: Settings → Apps → Special Access → Install Unknown Apps
-3. **Transfer APK** to your device (USB, email, or cloud storage)
-4. **Tap the APK file** and select "Install"
-5. **Allow all permissions** when prompted:
-   - Notifications (for reminders)
-   - Alarms & Reminders (for precise timing)
-   - Storage access (for data management)
-6. **Disable battery optimization** for the app (recommended for reliable reminders)
-7. **Launch "💎 Beautiful Tasks Elite 💎"** and start managing tasks!
+### 📱 **Quick Installation Guide**
+
+**Step 1: Download**
+- Click the download link above to get the APK file
+
+**Step 2: Enable Installation**
+- Go to **Settings → Security → Unknown Sources** (enable it)
+- For Android 9+: **Settings → Apps → Install Unknown Apps**
+
+**Step 3: Install**
+- Open the downloaded APK file
+- Tap **"Install"** and wait for completion
+
+**Step 4: Setup**
+- **Allow ALL permissions** when prompted (notifications, alarms, storage)
+- **Disable battery optimization** for the app (Settings → Battery → App Optimization)
+- Launch **"💎 Beautiful Tasks Elite 💎"** and enjoy!
+
+✅ **Installation complete!** The app works offline - no internet required.
 
 ###  **Windows Antivirus Warning**
 If Windows flags the APK as "virus" - **this is a FALSE POSITIVE**. APK files often trigger Windows Defender warnings. Solutions:
@@ -179,10 +185,6 @@ Task_Manager_App/
 - **🔔 reminders/**: Background services for intelligent notifications
 - **💉 di/**: Dependency injection modules using Hilt
 - **📦 releases/**: Production-ready APK files for distribution
-
-## 📸 **Screenshots**
-
-*Coming Soon: Beautiful screenshots showcasing the elite diamond UI, task management interface, and reminder system.*
 
 ## 🆘 **Support & Feedback**
 
