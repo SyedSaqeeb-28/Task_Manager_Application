@@ -55,8 +55,23 @@ class NotificationHelper @Inject constructor(private val context: Context) {
         }
     }
 
-    fun showTaskReminder(taskTitle: String, taskDescription: String, taskId: Long, isCritical: Boolean = false) {
+    fun showTaskReminder(taskTitle: String, taskDescription: String, taskId: Long, priority: String = "MEDIUM") {
         android.util.Log.d("NotificationHelper", "🔔 Showing task reminder notification for: $taskTitle")
+        
+        // Priority-based messages
+        val priorityMessage = when (priority.uppercase()) {
+            "HIGH" -> "🔴 HIGH PRIORITY TASK DUE! Please complete it immediately!"
+            "MEDIUM" -> "🟡 MEDIUM PRIORITY TASK DUE! Don't forget to complete it!"
+            "LOW" -> "🟢 Low priority task reminder - Complete when you have time!"
+            else -> "📋 Task reminder - Please complete your task!"
+        }
+        
+        val priorityEmoji = when (priority.uppercase()) {
+            "HIGH" -> "🚨"
+            "MEDIUM" -> "⚠️"
+            "LOW" -> "📝"
+            else -> "📋"
+        }
         
         // Use a deep-link style intent so Navigation can route straight to Task Detail
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -90,11 +105,11 @@ class NotificationHelper @Inject constructor(private val context: Context) {
         
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("🚨 TASK REMINDER")
-            .setContentText("$taskTitle - $taskDescription")
+            .setContentTitle("$priorityEmoji TASK REMINDER")
+            .setContentText("$priorityMessage")
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("$taskTitle\n\n$taskDescription")
-                .setBigContentTitle("🚨 TASK REMINDER"))
+                .bigText("$priorityMessage\n\n📝 Task: $taskTitle\n💡 Details: $taskDescription")
+                .setBigContentTitle("$priorityEmoji TASK REMINDER"))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDefaults(NotificationCompat.DEFAULT_LIGHTS) // Don't use DEFAULT_ALL, we'll set sound manually
             .setSound(alarmSound) // Use alarm sound like alarm clock
@@ -123,6 +138,6 @@ class NotificationHelper @Inject constructor(private val context: Context) {
     fun triggerTestNotification(taskTitle: String, message: String = "This is a test notification - if you see this, notifications are working!") {
         android.util.Log.d("NotificationHelper", "🧪 Triggering test notification")
         val testTaskId = System.currentTimeMillis()
-        showTaskReminder(taskTitle, message, testTaskId, true)
+        showTaskReminder(taskTitle, message, testTaskId, "HIGH")
     }
 }

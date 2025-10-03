@@ -57,6 +57,19 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
+            
+        <!-- Ultimate reminder service with sound and vibration -->
+        <service
+            android:name=".services.UltimateReminderService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+            
+        <!-- Ultimate reminder broadcast receiver -->
+        <receiver
+            android:name=".services.ReminderBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
         
     </application>
 

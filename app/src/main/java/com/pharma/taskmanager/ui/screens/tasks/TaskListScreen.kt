@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,6 +67,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -76,6 +80,7 @@ import com.pharma.taskmanager.data.database.TaskConstants
 import com.pharma.taskmanager.data.database.TaskEntity
 import com.pharma.taskmanager.ui.viewmodel.TaskViewModel
 import com.pharma.taskmanager.utils.DateTimeUtils
+import com.pharma.taskmanager.ui.theme.*
 import kotlinx.coroutines.launch
 
 // Filter options enum
@@ -191,7 +196,18 @@ fun TaskListScreen(
                             }
                         )
                     } else {
-                        Text("Tasks (${allTasks.size})")
+                        Text(
+                            "💎 TASKS (${allTasks.size}) 💎",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Black,
+                                shadow = Shadow(
+                                    color = EliteGold,
+                                    offset = Offset(2f, 2f),
+                                    blurRadius = 6f
+                                )
+                            ),
+                            color = EliteCrystal
+                        )
                     }
                 },
                 navigationIcon = {
@@ -473,28 +489,74 @@ private fun TaskItem(
     val isCompact = screenWidth < 600.dp
     val isExpanded = screenWidth >= 840.dp
     
+    // Beautiful priority-based colors
+    val priorityColor = when (task.priority) {
+        TaskConstants.PRIORITY_HIGH -> Color(0xFFFF5252) // Beautiful red
+        TaskConstants.PRIORITY_MEDIUM -> Color(0xFFFF9800) // Beautiful orange
+        TaskConstants.PRIORITY_LOW -> Color(0xFF4CAF50) // Beautiful green
+        else -> Color(0xFF2196F3) // Beautiful blue default
+    }
+    
+    val cardBackground = if (task.status == TaskConstants.STATUS_COMPLETED) {
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+    } else {
+        when (task.priority) {
+            TaskConstants.PRIORITY_HIGH -> priorityColor.copy(alpha = 0.05f)
+            TaskConstants.PRIORITY_MEDIUM -> priorityColor.copy(alpha = 0.03f)
+            TaskConstants.PRIORITY_LOW -> priorityColor.copy(alpha = 0.03f)
+            else -> MaterialTheme.colorScheme.surface
+        }
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = if (isExpanded) 24.dp else if (isCompact) 8.dp else 16.dp,
-                vertical = if (isCompact) 3.dp else 4.dp
+                vertical = if (isCompact) 4.dp else 6.dp
             )
             .clickable { onTaskClick() },
         colors = CardDefaults.cardColors(
-            containerColor = if (task.status == TaskConstants.STATUS_COMPLETED) {
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-            } else {
-                MaterialTheme.colorScheme.surface
+            containerColor = when (task.priority) {
+                TaskConstants.PRIORITY_HIGH -> EliteObsidian.copy(alpha = 0.9f)
+                TaskConstants.PRIORITY_MEDIUM -> EliteMidnight.copy(alpha = 0.8f)
+                else -> EliteObsidian.copy(alpha = 0.7f)
             }
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+        shape = RoundedCornerShape(32.dp),
+        border = BorderStroke(
+            6.dp,
+            Brush.linearGradient(
+                colors = listOf(
+                    when (task.priority) {
+                        TaskConstants.PRIORITY_HIGH -> EliteRuby
+                        TaskConstants.PRIORITY_MEDIUM -> EliteGold
+                        else -> EliteEmerald
+                    },
+                    EliteDiamond
+                )
+            )
         )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(if (isCompact) 12.dp else 16.dp),
-            verticalAlignment = Alignment.Top
-        ) {
+        Column {
+            // Beautiful priority indicator bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .background(
+                        color = priorityColor,
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    )
+            )
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(if (isCompact) 16.dp else 20.dp),
+                verticalAlignment = Alignment.Top
+            ) {
             // Completion checkbox
             IconButton(
                 onClick = onToggleComplete,
@@ -556,51 +618,137 @@ private fun TaskItem(
                     )
                 }
                 
-                // Due date and priority row
+                // Beautiful priority badge and info row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(top = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Due date
-                    task.dueDateTime?.let { dueTime ->
-                        val isOverdue = DateTimeUtils.isOverdue(dueTime) && 
-                                      task.status == TaskConstants.STATUS_PENDING
-                        
-                        Text(
-                            text = when {
-                                DateTimeUtils.isDueToday(dueTime) -> "Due today"
-                                DateTimeUtils.isDueTomorrow(dueTime) -> "Due tomorrow"
-                                isOverdue -> "Overdue"
-                                else -> "Due ${DateTimeUtils.formatDate(dueTime)}"
-                            },
-                            style = MaterialTheme.typography.labelSmall,
-                            color = when {
-                                isOverdue -> Color(0xFFF44336)
-                                DateTimeUtils.isDueToday(dueTime) -> Color(0xFFFF9800)
-                                else -> MaterialTheme.colorScheme.onSurfaceVariant
-                            }
-                        )
+                    // Beautiful priority badge
+                    val priorityEmoji = when (task.priority) {
+                        TaskConstants.PRIORITY_HIGH -> "🔴"
+                        TaskConstants.PRIORITY_MEDIUM -> "🟡"
+                        TaskConstants.PRIORITY_LOW -> "🟢"
+                        else -> "📋"
+                    }
+                    
+                    val priorityText = when (task.priority) {
+                        TaskConstants.PRIORITY_HIGH -> "HIGH PRIORITY"
+                        TaskConstants.PRIORITY_MEDIUM -> "MEDIUM"
+                        TaskConstants.PRIORITY_LOW -> "LOW"
+                        else -> "NORMAL"
+                    }
+                    
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = priorityColor.copy(alpha = 0.15f),
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                            .padding(horizontal = 12.dp, vertical = 4.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = priorityEmoji,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = priorityText,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = priorityColor,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                     
                     Spacer(modifier = Modifier.weight(1f))
                     
-                    // Priority indicator
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(
-                                when (task.priority) {
-                                    TaskConstants.PRIORITY_HIGH -> Color(0xFFF44336)
-                                    TaskConstants.PRIORITY_MEDIUM -> Color(0xFFFF9800)
-                                    TaskConstants.PRIORITY_LOW -> Color(0xFF4CAF50)
-                                    else -> MaterialTheme.colorScheme.onSurfaceVariant
-                                }
+                    // Beautiful due date with icon
+                    task.dueDateTime?.let { dueTime ->
+                        val isOverdue = DateTimeUtils.isOverdue(dueTime) && 
+                                      task.status == TaskConstants.STATUS_PENDING
+                        
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .background(
+                                    color = when {
+                                        isOverdue -> Color(0xFFF44336).copy(alpha = 0.1f)
+                                        DateTimeUtils.isDueToday(dueTime) -> Color(0xFFFF9800).copy(alpha = 0.1f)
+                                        else -> MaterialTheme.colorScheme.surfaceVariant
+                                    },
+                                    shape = RoundedCornerShape(16.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = when {
+                                    isOverdue -> "⚠️"
+                                    DateTimeUtils.isDueToday(dueTime) -> "📅"
+                                    DateTimeUtils.isDueTomorrow(dueTime) -> "🕐"
+                                    else -> "📆"
+                                },
+                                style = MaterialTheme.typography.labelSmall
                             )
-                    )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = when {
+                                    DateTimeUtils.isDueToday(dueTime) -> "Today"
+                                    DateTimeUtils.isDueTomorrow(dueTime) -> "Tomorrow"
+                                    isOverdue -> "Overdue"
+                                    else -> DateTimeUtils.formatDate(dueTime)
+                                },
+                                style = MaterialTheme.typography.labelSmall,
+                                color = when {
+                                    isOverdue -> Color(0xFFF44336)
+                                    DateTimeUtils.isDueToday(dueTime) -> Color(0xFFFF9800)
+                                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                },
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                
+                    // Reminder indicator
+                    if (task.reminderTime != null) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = Color(0xFF9C27B0).copy(alpha = 0.1f),
+                                    shape = CircleShape
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Text(
+                                text = "🔔",
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    }
+                }
+                
+                // Status indicator for completed tasks
+                if (task.status == TaskConstants.STATUS_COMPLETED) {
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "✅",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "COMPLETED",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF4CAF50),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
             
@@ -618,6 +766,7 @@ private fun TaskItem(
                     )
                 }
             }
+        }
         }
     }
 }

@@ -161,14 +161,14 @@ fun TaskCreateScreen(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        text = "Priority",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    Column(Modifier.selectableGroup()) {
+        Text(
+            text = "🎯 Priority Level",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+        Column(Modifier.selectableGroup()) {
                         PriorityOption(
                             text = "High Priority",
                             selected = priority == TaskConstants.PRIORITY_HIGH,

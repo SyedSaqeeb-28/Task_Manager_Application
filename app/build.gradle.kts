@@ -10,11 +10,12 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.pharma.taskmanager"
+        applicationId = "com.pharma.taskmanager.beautiful"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "4.0-ELITE"
+        setProperty("archivesBaseName", "Beautiful-TaskManager")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -32,14 +33,14 @@ android {
         }
     }
     
-    // Updated Java version to 17 for compatibility
+    // Java version compatible with available JDK
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     
     buildFeatures {

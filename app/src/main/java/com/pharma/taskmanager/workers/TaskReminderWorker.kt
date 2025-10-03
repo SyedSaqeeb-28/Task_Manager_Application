@@ -66,7 +66,8 @@ class TaskReminderWorker @AssistedInject constructor(
             
             if (task.status == TaskConstants.STATUS_PENDING) {
                 Log.d(TAG, "🚨 Task is PENDING - Starting persistent reminder with vibration and sound")
-                notificationHelper.showTaskReminder(task.title, task.description ?: "", taskId.toLong())
+                val priority = TaskConstants.getPriorityLabel(task.priority)
+                notificationHelper.showTaskReminder(task.title, task.description ?: "", taskId.toLong(), priority)
                 Log.d(TAG, "✅ Persistent reminder started successfully for task: ${task.title}")
             } else {
                 Log.d(TAG, "⏭️ Task status is '${task.status}' - not pending, skipping notification")

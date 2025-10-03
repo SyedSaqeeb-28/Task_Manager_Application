@@ -254,7 +254,8 @@ class TaskViewModel @Inject constructor(
                         android.util.Log.d("TaskViewModel", "Found overdue reminder for task ${task.id}: ${task.title}")
                         // Use both approaches for maximum reliability
                         reminderScheduler.triggerReminderNow(task.id)
-                        notificationHelper.showTaskReminder(task.title, task.description ?: "Task reminder", task.id.toLong())
+                        val priority = TaskConstants.getPriorityLabel(task.priority)
+                        notificationHelper.showTaskReminder(task.title, task.description ?: "Task reminder", task.id.toLong(), priority)
                     }
                 }
             } catch (e: Exception) {
@@ -267,7 +268,8 @@ class TaskViewModel @Inject constructor(
     fun forceNotificationForTask(task: TaskEntity) {
         viewModelScope.launch {
             android.util.Log.d("TaskViewModel", "Force triggering notification for task: ${task.title}")
-            notificationHelper.showTaskReminder(task.title, task.description ?: "Task reminder", task.id.toLong())
+            val priority = TaskConstants.getPriorityLabel(task.priority)
+            notificationHelper.showTaskReminder(task.title, task.description ?: "Task reminder", task.id.toLong(), priority)
         }
     }
     
